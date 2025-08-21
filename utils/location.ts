@@ -8,9 +8,17 @@ export interface LocationData {
 }
 
 export const fetchLocationData = async (): Promise<LocationData> => {
-  const response = await fetch('/api/location');
-  if (!response.ok) {
-    throw new Error('Failed to get location data');
+  try {
+    const response = await fetch('/api/location');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const location = await response.json();
+    return location;
+  } catch (error) {
+    console.error('Client: Failed to fetch location data:', error);
+    throw error;
   }
-  return response.json();
 };

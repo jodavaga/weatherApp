@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { fetchWeatherData, transformWeatherData, WeatherData } from '../utils/weather';
 import { fetchLocationData, LocationData } from '../utils/location';
@@ -16,11 +15,10 @@ export default function WeatherInfo() {
         setLoading(true);
         setError(null);
 
-        // Fetch location data
+        console.log('Fetching location...');
         const locationData = await fetchLocationData();
         setLocation(locationData);
 
-        // Fetch and transform weather data
         const weatherData = await fetchWeatherData(
           locationData.latitude,
           locationData.longitude,
@@ -30,8 +28,8 @@ export default function WeatherInfo() {
         const transformedWeather = transformWeatherData(weatherData);
         setWeather(transformedWeather);
       } catch (err) {
-        console.error('Weather fetch error:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('weather fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Something went wrong');
       } finally {
         setLoading(false);
       }
@@ -69,9 +67,12 @@ export default function WeatherInfo() {
       <h2 className="text-xl font-semibold mb-2">Weather</h2>
       {location && weather && (
         <div className="space-y-2">
-          <p className="text-sm text-black/70 dark:text-white/70">
-            {location.city}, {location.country}
-          </p>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-sm text-blue-600 dark:text-blue-400">📍</span>
+            <p className="text-sm text-black/70 dark:text-white/70">
+              {location.city}, {location.region}, {location.country}
+            </p>
+          </div>
           <div className="flex items-center gap-2">
             <span className="text-3xl">{weather.icon}</span>
             <div className="text-2xl font-bold">
@@ -82,6 +83,7 @@ export default function WeatherInfo() {
           <div className="text-xs text-black/60 dark:text-white/60 space-y-1">
             <p>Humidity: {weather.humidity}%</p>
             <p>Wind: {weather.windSpeed} km/h</p>
+            <p>Timezone: {location.timezone}</p>
           </div>
         </div>
       )}
