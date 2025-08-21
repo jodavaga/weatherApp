@@ -1,21 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-interface LocationData {
-  city: string;
-  region: string;
-  country: string;
-  latitude: number;
-  longitude: number;
-  timezone: string;
-}
-interface WeatherData {
-  temperature: number;
-  condition: string;
-  humidity: number;
-  windSpeed: number;
-  icon: string;
-}
+import { fetchWeatherData, transformWeatherData, WeatherData } from '../utils/weather';
+import { fetchLocationData, LocationData } from '../utils/location';
 
 export default function WeatherInfo() {
   const [location, setLocation] = useState<LocationData | null>(null);
@@ -29,81 +16,19 @@ export default function WeatherInfo() {
         setLoading(true);
         setError(null);
 
-        // Get location data from API
-        const locationResponse = await fetch('/api/location');
-        if (!locationResponse.ok) {
-          throw new Error('Failed to get location data');
-        }
-        const locationData: LocationData = await locationResponse.json();
+        // Fetch location data
+        const locationData = await fetchLocationData();
         setLocation(locationData);
 
-        // Fetch weather data from Open-Meteo
-        const weatherResponse = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${locationData.latitude}&longitude=${locationData.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=${locationData.timezone}`
+        // Fetch and transform weather data
+        const weatherData = await fetchWeatherData(
+          locationData.latitude,
+          locationData.longitude,
+          locationData.timezone
         );
-
-        if (!weatherResponse.ok) {
-          throw new Error('Failed to fetch weather data');
-        }
-
-        const weatherData = await weatherResponse.json();
-        const current = weatherData.current;
-
-        // Map weather codes to conditions and icons
-        const weatherCode = current.weather_code;
-        let condition = 'Unknown';
-        let icon = '❓';
-
-        if (weatherCode === 0) {
-          condition = 'Clear sky';
-          icon = '☀️';
-        } else if (weatherCode >= 1 && weatherCode <= 3) {
-          condition = 'Partly cloudy';
-          icon = '⛅';
-        } else if (weatherCode >= 45 && weatherCode <= 48) {
-          condition = 'Foggy';
-          icon = '🌫️';
-        } else if (weatherCode >= 51 && weatherCode <= 55) {
-          condition = 'Drizzle';
-          icon = '🌦️';
-        } else if (weatherCode >= 56 && weatherCode <= 57) {
-          condition = 'Freezing drizzle';
-          icon = '🌨️';
-        } else if (weatherCode >= 61 && weatherCode <= 65) {
-          condition = 'Rain';
-          icon = '🌧️';
-        } else if (weatherCode >= 66 && weatherCode <= 67) {
-          condition = 'Freezing rain';
-          icon = '🌨️';
-        } else if (weatherCode >= 71 && weatherCode <= 75) {
-          condition = 'Snow';
-          icon = '❄️';
-        } else if (weatherCode >= 77 && weatherCode <= 77) {
-          condition = 'Snow grains';
-          icon = '❄️';
-        } else if (weatherCode >= 80 && weatherCode <= 82) {
-          condition = 'Rain showers';
-          icon = '🌦️';
-        } else if (weatherCode >= 85 && weatherCode <= 86) {
-          condition = 'Snow showers';
-          icon = '🌨️';
-        } else if (weatherCode >= 95 && weatherCode <= 95) {
-          condition = 'Thunderstorm';
-          icon = '⛈️';
-        } else if (weatherCode >= 96 && weatherCode <= 99) {
-          condition = 'Thunderstorm with hail';
-          icon = '⛈️';
-        }
-
-        const weather: WeatherData = {
-          temperature: Math.round(current.temperature_2m),
-          condition,
-          humidity: current.relative_humidity_2m,
-          windSpeed: Math.round(current.wind_speed_10m),
-          icon,
-        };
-
-        setWeather(weather);
+        
+        const transformedWeather = transformWeatherData(weatherData);
+        setWeather(transformedWeather);
       } catch (err) {
         console.error('Weather fetch error:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');

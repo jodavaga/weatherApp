@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // This API is now a fallback for client-side geolocation
-    // Return a default location for cases where client-side geolocation fails
+
     return NextResponse.json({
       city: 'New York',
       region: 'NY',
