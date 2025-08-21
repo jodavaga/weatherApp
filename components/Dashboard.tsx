@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import WeatherInfo from "./WeatherInfo";
-import QuoteOfTheDay from "./QuoteOfTheDay";
+import QuoteOfTheDay from "./quotes/QuoteOfTheDay";
 
 function LoadingFallback() {
   return (
