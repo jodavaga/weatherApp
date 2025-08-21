@@ -1,36 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-interface GeoData {
-  city?: string;
-  region?: string;
-  country?: string;
-  latitude?: number;
-  longitude?: number;
-  timezone?: string;
-}
-
-interface RequestWithGeo extends NextRequest {
-  geo?: GeoData;
-}
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const geo = (request as RequestWithGeo).geo;
-    
-    if (!geo) {
-      return NextResponse.json(
-        { error: 'Location data not available' },
-        { status: 400 }
-      );
-    }
-
+    // This API is now a fallback for client-side geolocation
+    // Return a default location for cases where client-side geolocation fails
     return NextResponse.json({
-      city: geo.city || 'Unknown',
-      region: geo.region || 'Unknown',
-      country: geo.country || 'Unknown',
-      latitude: geo.latitude || 0,
-      longitude: geo.longitude || 0,
-      timezone: geo.timezone || 'UTC',
+      city: 'New York',
+      region: 'NY',
+      country: 'US',
+      latitude: 40.7128,
+      longitude: -74.0060,
+      timezone: 'America/New_York',
     });
   } catch (error) {
     console.error('Error getting location:', error);
