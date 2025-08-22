@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import WeatherInfo from '../WeatherInfo'
 import { fetchLocationData } from '../../utils/location'
 import { fetchWeatherData } from '../../utils/weather'
+import { WeatherProvider } from '../WeatherContext'
 
 jest.mock('../../utils/location')
 jest.mock('../../utils/weather')
@@ -35,13 +36,21 @@ describe('WeatherInfo', () => {
       }
     })
 
-    render(<WeatherInfo />)
+    render(
+      <WeatherProvider>
+        <WeatherInfo />
+      </WeatherProvider>
+    )
 
     expect(screen.getByText('Weather')).toBeInTheDocument()
   })
 
   it('should show loading state initially', () => {
-    render(<WeatherInfo />)
+    render(
+      <WeatherProvider>
+        <WeatherInfo />
+      </WeatherProvider>
+    )
 
     expect(screen.getByText('Weather')).toBeInTheDocument()
   })

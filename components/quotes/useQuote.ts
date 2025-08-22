@@ -11,7 +11,7 @@ interface CachedQuote extends QuoteData {
 }
 
 const CACHE_KEY = 'weather-app-quote';
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hors
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 const getCachedQuote = (): CachedQuote | null => {
   if (typeof window === 'undefined') return null;

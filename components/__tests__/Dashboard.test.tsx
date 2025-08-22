@@ -1,16 +1,25 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import Dashboard from '../Dashboard'
+import { WeatherProvider } from '../WeatherContext'
 
 describe('Dashboard', () => {
   it('should render the dashboard with title', () => {
-    render(<Dashboard />)
+    render(
+      <WeatherProvider>
+        <Dashboard />
+      </WeatherProvider>
+    )
 
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
   })
 
   it('should render weather and quote sections', () => {
-    render(<Dashboard />)
+    render(
+      <WeatherProvider>
+        <Dashboard />
+      </WeatherProvider>
+    )
 
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
     

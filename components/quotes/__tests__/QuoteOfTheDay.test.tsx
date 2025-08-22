@@ -52,7 +52,7 @@ describe('QuoteOfTheDay', () => {
     mockUseQuote.mockReturnValue({
       quote: null,
       loading: false,
-      error: 'Failed to fetch qoute',
+      error: 'Failed to fetch quote',
       refreshQuote: jest.fn()
     })
 

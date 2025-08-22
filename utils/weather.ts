@@ -81,3 +81,56 @@ export const transformWeatherData = (weatherData: OpenMeteoResponse): WeatherDat
     icon,
   };
 };
+
+export const getWeatherBackground = (weatherData: WeatherData): string => {
+  const { temperature, condition } = weatherData;
+  
+  // Temperature-based colors
+  if (temperature >= 30) {
+    // Hot weather - warm colors
+    if (condition.toLowerCase().includes('clear') || condition.toLowerCase().includes('sunny')) {
+      return 'bg-gradient-to-br from-orange-500 to-red-600'; // Dark orange for hot and sunny
+    }
+    return 'bg-gradient-to-br from-orange-400 to-red-500'; // Orange for hot weather
+  } else if (temperature >= 20) {
+    // Warm weather
+    if (condition.toLowerCase().includes('clear') || condition.toLowerCase().includes('sunny')) {
+      return 'bg-gradient-to-br from-yellow-400 to-orange-400'; // Yellow-orange for warm and sunny
+    }
+    return 'bg-gradient-to-br from-blue-300 to-blue-400'; // Light blue for warm weather
+  } else if (temperature >= 10) {
+    // Cool weather
+    if (condition.toLowerCase().includes('rain') || condition.toLowerCase().includes('drizzle')) {
+      return 'bg-gradient-to-br from-gray-400 to-gray-500'; // Gray for rainy weather
+    }
+    return 'bg-gradient-to-br from-blue-200 to-blue-300'; // Light blue for cool weather
+  } else if (temperature >= 0) {
+    // Cold weather
+    if (condition.toLowerCase().includes('snow')) {
+      return 'bg-gradient-to-br from-blue-100 to-blue-200'; // Very light blue for snowy weather
+    }
+    return 'bg-gradient-to-br from-blue-100 to-gray-200'; // Light blue-gray for cold weather
+  } else {
+    // Very cold weather
+    if (condition.toLowerCase().includes('snow')) {
+      return 'bg-gradient-to-br from-blue-50 to-blue-100'; // Very light blue for snowy weather
+    }
+    return 'bg-gradient-to-br from-gray-100 to-blue-100'; // Light gray-blue for very cold weather
+  }
+};
+
+export const getWeatherTextColor = (weatherData: WeatherData): string => {
+  const { temperature, condition } = weatherData;
+  
+  // Dark text for light backgrounds, light text for dark backgrounds
+  if (temperature >= 30) {
+    return 'text-white'; // White text for hot weather backgrounds
+  } else if (temperature >= 20) {
+    if (condition.toLowerCase().includes('clear') || condition.toLowerCase().includes('sunny')) {
+      return 'text-gray-800'; // Dark text for yellow backgrounds
+    }
+    return 'text-gray-800'; // Dark text for light blue backgrounds
+  } else {
+    return 'text-gray-800'; // Dark text for light backgrounds
+  }
+};
