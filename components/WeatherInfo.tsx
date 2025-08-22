@@ -39,7 +39,7 @@ export default function WeatherInfo() {
     };
 
     fetchLocationAndWeather();
-  }, []);
+  }, [setWeatherData]);
 
   if (loading) {
     return (
