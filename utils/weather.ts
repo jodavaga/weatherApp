@@ -2,7 +2,6 @@ export interface WeatherCondition {
   condition: string;
   icon: string;
 }
-
 export interface OpenMeteoResponse {
   current: {
     temperature_2m: number;
@@ -11,7 +10,6 @@ export interface OpenMeteoResponse {
     weather_code: number;
   };
 }
-
 export interface WeatherData {
   temperature: number;
   condition: string;
@@ -55,7 +53,6 @@ export const getWeatherCondition = (weatherCode: number): WeatherCondition => {
   return weatherMap[weatherCode] || { condition: 'Unknown', icon: '❓' };
 };
 
-// Fetch weather data from Open-Meteo
 export const fetchWeatherData = async (
   latitude: number, 
   longitude: number, 

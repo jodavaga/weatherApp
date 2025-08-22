@@ -25,7 +25,7 @@ const transformQuoteResponse = (data: QuoteResponse): QuoteData => {
   };
 };
 
-const fetchQuoteFromQuotable = async (): Promise<QuoteData> => {
+const fetchQuoteFromApi = async (): Promise<QuoteData> => {
   try {
     const response = await fetch('https://api.quotable.io/random?maxLength=150&tags=inspirational|motivational|success|life', {
       headers: {
@@ -56,7 +56,7 @@ const FALLBACK_QUOTES: QuoteData[] = [
 
 export async function GET() {
   try {
-    const quote = await fetchQuoteFromQuotable();
+    const quote = await fetchQuoteFromApi();
     
     return NextResponse.json(quote, {
       headers: {
@@ -67,7 +67,6 @@ export async function GET() {
   } catch (error) {
     console.warn('Quotable API failed, using fallback quote:', error);
     
-    // Return a random fallback quote
     const fallbackQuote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
     
     return NextResponse.json(fallbackQuote, {
